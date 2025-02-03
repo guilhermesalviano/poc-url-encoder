@@ -5,14 +5,12 @@ import (
     "github.com/gorilla/mux"
 )
 
-// StartServer initializes and runs the HTTP server
 func StartServer() {
     router := mux.NewRouter()
-    
-    // Define routes
-    router.HandleFunc("/", homeHandler).Methods("GET")
-    router.HandleFunc("/users", getUsersHandler).Methods("GET")
 
-    // Start server
+    router.HandleFunc("/health", healthCheck).Methods("GET")
+    router.HandleFunc("/encode", encodeHandler).Methods("POST")
+    router.HandleFunc("/decode", decodeHandler).Methods("GET")
+
     http.ListenAndServe(":3333", router)
 }
