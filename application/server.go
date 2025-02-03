@@ -10,7 +10,7 @@ func StartServer() {
 
     router.HandleFunc("/health", healthCheck).Methods("GET")
     router.HandleFunc("/encode", encodeHandler).Methods("POST")
-    router.HandleFunc("/decode", decodeHandler).Methods("GET")
+    router.HandleFunc("/decode", decodeHandler).Methods("POST")
 
     http.ListenAndServe(":3333", router)
 }

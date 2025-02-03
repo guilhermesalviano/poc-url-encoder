@@ -7,7 +7,7 @@ import (
 )
 
 type RequestBody struct {
-    URL string `json:"url"`
+    Content string `json:"content"`
 }
 
 func healthCheck(w http.ResponseWriter, r *http.Request) {
@@ -32,12 +32,12 @@ func encodeHandler(w http.ResponseWriter, r *http.Request) {
         return
     }
 
-    if body.URL == "" {
-        http.Error(w, `{"error": "URL parameter is required"}`, http.StatusBadRequest)
+    if body.Content == "" {
+        http.Error(w, `{"error": "Content parameter is required"}`, http.StatusBadRequest)
         return
     }
 
-    parsedURL, err := url.Parse(body.URL)
+    parsedContent, err := url.Parse(body.Content)
     if err != nil {
         http.Error(w, `{"error": "Invalid URL format"}`, http.StatusBadRequest)
         return
@@ -47,7 +47,7 @@ func encodeHandler(w http.ResponseWriter, r *http.Request) {
 
     switch {
     case encodeOnlyParams:
-        query := parsedURL.Query()
+        query := parsedContent.Query()
         encodedQuery := make(url.Values)
         
         for key, values := range query {
@@ -56,17 +56,17 @@ func encodeHandler(w http.ResponseWriter, r *http.Request) {
                 encodedQuery.Add(encodedKey, url.QueryEscape(value))
             }
         }
-        
-        parsedURL.RawQuery = encodedQuery.Encode()
-        encodedURL = parsedURL.String()
+
+        parsedContent.RawQuery = encodedQuery.Encode()
+        encodedURL = parsedContent.String()
 
     default:
-        encodedURL = url.QueryEscape(body.URL)
+        encodedURL = url.QueryEscape(body.Content)
     }
 
     response := map[string]interface{}{
-        "original_url":    body.URL,
-        "encoded_url":     encodedURL,
+        "original_content":    body.Content,
+        "encoded_content":     encodedURL,
         "parameters_used": map[string]bool{
             "encode_only_params": encodeOnlyParams,
         },
@@ -76,21 +76,29 @@ func encodeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func decodeHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+    w.Header().Set("Content-Type", "application/json")
 
-	encodedURL := r.URL.Query().Get("url")
-	if encodedURL == "" {
-		http.Error(w, `{"error": "URL parameter is required"}`, http.StatusBadRequest)
-		return
-	}
+    if r.Method != http.MethodPost {
+        http.Error(w, `{"error": "Method not allowed"}`, http.StatusMethodNotAllowed)
+        return
+    }
 
-	decodedURL, err := url.QueryUnescape(encodedURL)
+    var body RequestBody
+    if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+        http.Error(w, `{"error": "Invalid request body"}`, http.StatusBadRequest)
+        return
+    }
+
+    contentDecode, err := url.QueryUnescape(body.Content)
 	if err != nil {
-		http.Error(w, `{"error": "Invalid encoded URL"}`, http.StatusBadRequest)
-		return
+		http.Error(w, `{"error": "Invalid request body"}`, http.StatusBadRequest)
+        return
 	}
 
-	json.NewEncoder(w).Encode(map[string]string{
-		"decoded_url": decodedURL,
-	})
+    response := map[string]interface{}{
+        "original_content":    body.Content,
+        "decoded_content":     contentDecode,
+    }
+
+    json.NewEncoder(w).Encode(response)
 }
