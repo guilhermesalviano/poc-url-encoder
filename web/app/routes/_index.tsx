@@ -13,7 +13,7 @@ export default function Index() {
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [encodeOnlyParams, setEncodeOnlyParams] = useState(true);
+  const [encodeOnlyParams, setEncodeOnlyParams] = useState(false);
 
   const handleApiCall = async (operation: "encode" | "decode") => {
     if (!input.trim()) {
@@ -65,10 +65,9 @@ export default function Index() {
           Paste your link below to encode or decode it
         </h1>
 
-        <input
-          type="text"
+        <textarea
           placeholder="https://test.com?msg=olá"
-          className="px-4 py-2 w-full border-b border-gray-800 text-lg"
+          className="px-2 py-1 w-full border-b border-gray-800 text-lg min-h-10 resize-none"
           value={input}
           onChange={(e) => setInput(e.target.value)}
         />
@@ -89,7 +88,7 @@ export default function Index() {
           <button
             type="button"
             onClick={() => handleApiCall("encode")}
-            disabled={loading}
+            disabled={loading || !input}
             className="border border-gray-800 px-3 py-1 disabled:opacity-50"
           >
             {loading ? "Encoding..." : "Encode"}
@@ -97,27 +96,31 @@ export default function Index() {
           <button
             type="button"
             onClick={() => handleApiCall("decode")}
-            disabled={loading}
+            disabled={loading || !input}
             className="border border-gray-800 px-3 py-1 disabled:opacity-50"
           >
             {loading ? "Decoding..." : "Decode"}
           </button>
         </div>
 
-        {result && (
-          <div className="mt-4 w-full">
-            <h2 className="text-xl font-semibold mb-2">Result:</h2>
-            <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded break-words">
-              {result}
-            </div>
-          </div>
-        )}
-
-        {error && (
-          <div className="mt-4 text-red-500 dark:text-red-400">
-            Error: {error}
-          </div>
-        )}
+        <div className="mt-4 w-full h-[160px]">
+          {result && (
+            <>
+              <h2 className="text-xl font-semibold mb-2">Result:</h2>
+              <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded break-words">
+                {result}
+              </div>
+            </>
+          )}
+          {error && (
+            <>
+              <h2 className="text-xl font-semibold mb-2">Error:</h2>
+              <div className="p-4 bg-gray-100">
+                <span className="text-red-500 dark:text-red-400">{error}</span>
+              </div>
+            </>
+          )}
+        </div>
       </main>
     </div>
   );

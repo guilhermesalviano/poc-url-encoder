@@ -38,7 +38,7 @@ func encodeHandler(w http.ResponseWriter, r *http.Request) {
     }
 
     parsedContent, err := url.Parse(body.Content)
-    if err != nil {
+    if err != nil && encodeOnlyParams {
         http.Error(w, `{"error": "Invalid URL format"}`, http.StatusBadRequest)
         return
     }
@@ -51,9 +51,11 @@ func encodeHandler(w http.ResponseWriter, r *http.Request) {
         encodedQuery := make(url.Values)
         
         for key, values := range query {
-            encodedKey := url.QueryEscape(key)
+            // encodedKey := url.QueryEscape(key)
+            encodedKey := key
             for _, value := range values {
-                encodedQuery.Add(encodedKey, url.QueryEscape(value))
+                // encodedQuery.Add(encodedKey, url.QueryEscape(value))
+                encodedQuery.Add(encodedKey, value)
             }
         }
 
@@ -66,7 +68,7 @@ func encodeHandler(w http.ResponseWriter, r *http.Request) {
 
     response := map[string]interface{}{
         "original_content":    body.Content,
-        "encoded_content":     encodedURL,
+        "content":     encodedURL,
         "parameters_used": map[string]bool{
             "encode_only_params": encodeOnlyParams,
         },
@@ -97,7 +99,7 @@ func decodeHandler(w http.ResponseWriter, r *http.Request) {
 
     response := map[string]interface{}{
         "original_content":    body.Content,
-        "decoded_content":     contentDecode,
+        "content":     contentDecode,
     }
 
     json.NewEncoder(w).Encode(response)
