@@ -35,7 +35,7 @@ jobs:
 
     - name: Tag Docker image as latest
       run: |
-        docker tag url-encoder:latest
+        docker tag url-encoder:${{ steps.generate_sha.outputs.sha }} url-encoder:latest
 
     - name: Create ECR Repository if it does not exist
       run: |
