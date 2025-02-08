@@ -1,0 +1,11 @@
+version: 2
+updates:
+  - package-ecosystem: "gomod"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      time: "10:00"
+      timezone: "America/Sao_Paulo"
+    commit-message:
+      prefix: "go"
+    open-pull-requests-limit: 5
