@@ -3,3 +3,6 @@
 vendor
 
 api/url-encoder
+
+*.tfstate
+.terraform*
