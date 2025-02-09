@@ -1,4 +1,4 @@
-import type { MetaFunction } from "@remix-run/node";
+import { json, type MetaFunction } from "@remix-run/node";
 import { useState } from "react";
 
 export const meta: MetaFunction = () => {
@@ -14,6 +14,7 @@ export default function Index() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [encodeOnlyParams, setEncodeOnlyParams] = useState(false);
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   const handleApiCall = async (operation: "encode" | "decode") => {
     if (!input.trim()) {
@@ -26,7 +27,7 @@ export default function Index() {
 
     try {
       const response = await fetch(
-        `http://localhost:3333/${operation}?encode_only_params=${encodeOnlyParams}`,
+        `${ backendUrl }${ operation }?encode_only_params=${ encodeOnlyParams }`,
         {
           method: "POST",
           headers: {
