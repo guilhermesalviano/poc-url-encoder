@@ -4,5 +4,5 @@ vendor
 
 api/url-encoder
 
-*.tfstate
+*.tfstate*
 .terraform*
