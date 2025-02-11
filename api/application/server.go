@@ -4,13 +4,20 @@ import (
     "net/http"
     "github.com/gorilla/mux"
     "github.com/gorilla/handlers"
+
+    "os"
 )
 
 func StartServer() {
     router := mux.NewRouter()
 
+    webHost := os.Getenv("WEB_HOST")
+    if webHost == "" {
+        webHost = "http://localhost:5173"
+    }
+
     corsMiddleware := handlers.CORS(
-        handlers.AllowedOrigins([]string{"http://localhost:5173", "http://172.0.0.1:5173"}),
+        handlers.AllowedOrigins([]string{webHost}),
         handlers.AllowedMethods([]string{"GET", "POST", "OPTIONS"}),
         handlers.AllowedHeaders([]string{"Content-Type"}),
         handlers.AllowCredentials(),
@@ -20,5 +27,10 @@ func StartServer() {
     router.HandleFunc("/encode", encodeHandler).Methods("POST")
     router.HandleFunc("/decode", decodeHandler).Methods("POST")
 
-    http.ListenAndServe(":3333", corsMiddleware(router))
+    port := os.Getenv("SERVER_PORT")
+    if port == "" {
+        port = "3333"
+    }
+
+    http.ListenAndServe(":"+port, corsMiddleware(router))
 }

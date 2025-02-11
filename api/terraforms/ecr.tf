@@ -1,5 +1,6 @@
 resource "aws_ecr_repository" "url_encoder" {
-  name = "url-encoder"
+  name         = "url-encoder"
+  force_delete = true
 }
 
 resource "null_resource" "build_and_push" {
