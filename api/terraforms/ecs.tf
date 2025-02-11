@@ -1,5 +1,7 @@
 resource "aws_ecs_cluster" "url-encoder_cluster" {
   name = "url-encoder-cluster"
+
+  depends_on = [null_resource.build_and_push]
 }
 
 resource "aws_ecs_task_definition" "url-encoder_task" {
@@ -12,7 +14,7 @@ resource "aws_ecs_task_definition" "url-encoder_task" {
 
   container_definitions = jsonencode([{
     name      = "url-encoder"
-    image     = var.image_url
+    image     = aws_ecr_repository.url_encoder.repository_url
     cpu       = 256
     memory    = 512
     essential = true
