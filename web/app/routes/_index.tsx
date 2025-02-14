@@ -61,7 +61,6 @@ export default function Index() {
           />
         </div>
       </header>
-      <AdComponent />
       <main className="flex flex-col items-center justify-center rounded-3xl gap-6 w-8/12">
         <h1 className="leading text-6xl font-bold text-gray-800 dark:text-gray-100">
           Paste your link below to encode or decode it
