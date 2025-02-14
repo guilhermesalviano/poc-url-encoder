@@ -1,4 +1,4 @@
-import { json, type MetaFunction } from "@remix-run/node";
+import { type MetaFunction } from "@remix-run/node";
 import { useState } from "react";
 import AdComponent from "~/components/adComponent";
 
@@ -28,7 +28,7 @@ export default function Index() {
 
     try {
       const response = await fetch(
-        `${ backendUrl }${ operation }?encode_only_params=${ encodeOnlyParams }`,
+        `/${ operation }?encode_only_params=${ encodeOnlyParams }`,
         {
           method: "POST",
           headers: {

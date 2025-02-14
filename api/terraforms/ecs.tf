@@ -47,7 +47,7 @@ resource "aws_ecs_service" "url-encoder_service" {
 
   network_configuration {
     subnets          = [aws_subnet.my_public_subnet.id]
-    security_groups  = [aws_security_group.my_security_group.id]  # Use your security group
+    security_groups  = [aws_security_group.my_security_group.id]
     assign_public_ip = true
   }
 }
