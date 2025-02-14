@@ -1,6 +1,8 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { processContent } from "~/utils/processContent";
 
+const frontendUrl = import.meta.env.VITE_FRONTEND_URL;
+
 export async function action({ request }: ActionFunctionArgs) {
   try {
     const url = new URL(request.url);
@@ -29,7 +31,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export function headers() {
   return {
-    "Access-Control-Allow-Origin": "http://localhost:5173",
+    "Access-Control-Allow-Origin": frontendUrl,
     "Access-Control-Allow-Methods": "POST",
     "Access-Control-Allow-Headers": "Content-Type",
   };
