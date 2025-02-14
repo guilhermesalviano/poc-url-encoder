@@ -16,7 +16,6 @@ export default function AdComponent() {
 
     return (
         <>
-            <h1>Página com Anúncios</h1>
             <ins
                 className="adsbygoogle"
                 style={{ display: "block" }}

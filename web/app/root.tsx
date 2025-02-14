@@ -37,11 +37,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
         {children}
         <ScrollRestoration />
         <Scripts />
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2721142105042988"
-          crossOrigin="anonymous"
-        />
       </body>
     </html>
   );

@@ -1,11 +1,10 @@
 import { type MetaFunction } from "@remix-run/node";
 import { useState } from "react";
-import AdComponent from "~/components/adComponent";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "URL Encode/Decode" },
-    { name: "description", content: "Quickly and effortlessly encode or decode URLs..." },
+    { title: "URL Encode and Decode" },
+    { name: "description", content: "Easily Encode and Decode URL with our online tool." },
   ];
 };
 
@@ -15,7 +14,7 @@ export default function Index() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [encodeOnlyParams, setEncodeOnlyParams] = useState(false);
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  const [isCopied, setIsCopied] = useState(false);
 
   const handleApiCall = async (operation: "encode" | "decode") => {
     if (!input.trim()) {
@@ -50,29 +49,29 @@ export default function Index() {
     }
   };
 
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(result);
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy text: ", err);
+    }
+  };
+
   return (
     <div className="flex flex-col justify-center items-center h-screen w-screen">
-      <header className="flex flex-col absolute top-8 left-12">
-        <div className="w-[134px]">
-          <img
-            src="/logo-light.png"
-            alt="guilherme"
-            className="block w-full dark:hidden pl-5 object-fill"
-          />
-        </div>
-      </header>
       <main className="flex flex-col items-center justify-center rounded-3xl gap-6 w-8/12">
         <h1 className="leading text-6xl font-bold text-gray-800 dark:text-gray-100">
           Paste your link below to encode or decode it
         </h1>
-
         <textarea
-          placeholder="https://test.com?msg=olá"
-          className="px-2 py-1 w-full border-b border-gray-800 text-lg min-h-10 resize-none"
+          placeholder="https://url-dencoder.vercel.app/?title=hello&description=world"
+          className="px-2 py-1 w-full border-b border-gray-800 text-lg min-h-24 resize-none"
+          autoFocus
           value={input}
           onChange={(e) => setInput(e.target.value)}
         />
-
         <div className="flex items-center gap-4">
           <label className="flex items-center gap-2">
             <input
@@ -84,7 +83,6 @@ export default function Index() {
             Encode only parameters
           </label>
         </div>
-
         <div className="flex content-end gap-4">
           <button
             type="button"
@@ -103,11 +101,20 @@ export default function Index() {
             {loading ? "Decoding..." : "Decode"}
           </button>
         </div>
-
-        <div className="mt-4 w-full h-[160px]">
+        <div className="mt-3 w-full h-[160px]">
           {result && (
             <>
-              <h2 className="text-xl font-semibold mb-2">Result:</h2>
+              <div className="flex justify-between mb-2">
+                <h2 className="text-xl font-semibold ">Result:</h2>
+                <button
+                  onClick={handleCopy}
+                  className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300"
+                >
+                {isCopied ? (
+                    <span>Copied</span>
+                  ) : <span> Copy to Clipboard</span>}
+                </button>
+              </div>
               <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded break-words">
                 {result}
               </div>
