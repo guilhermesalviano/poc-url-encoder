@@ -2,5 +2,4 @@ name = "url-encoder"
 compatibility_date = "2024-01-01"  # Required for Cloudflare features
 pages_build_output_dir = "./build/client"  # Points to your static assets
 
-[build]
 command = "npm run build"  # Build command for your Remix app
