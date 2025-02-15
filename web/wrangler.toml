@@ -1,11 +1,6 @@
 name = "url-encoder"
-compatibility_date = "2024-01-01"  # Required for Cloudflare features
-pages_build_output_dir = "./build/client"  # Points to your static assets
+compatibility_date = "2024-02-12"
+main = "./build/server/index.js"
 
-# For Remix apps with server-side rendering (Cloudflare Pages Functions)
-[build]
-command = "npm run build"
-upload_dir = "build/client"  # Static assets directory
-
-# Enable Node.js compatibility if your Remix app uses Node APIs (optional)
-node_compatibility = true
+[site]
+bucket = "./build/client"
