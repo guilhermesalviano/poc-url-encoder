@@ -1,0 +1,7 @@
+name = "url-encoder"
+main = "build/server/index.js" # Path to server build
+compatibility_date = "2024-01-01"
+
+[site]
+bucket = "build/client" # Static assets directory
+entry-point = "build/server" # Server entry point
