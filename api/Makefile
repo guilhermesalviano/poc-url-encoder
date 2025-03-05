@@ -21,18 +21,8 @@ run: build
 	./$(BINARY_NAME)
 
 deps:
-	$(GOMOD) vendor
-
-#docker-deps:
-#	rm -Rf 
-#	docker-compose up vendor
-
-#docker-stack:
-#	docker network create comm-hub || true
-#	docker run --rm --name rabbitmq.local --network comm-hub -d -p 5672:5672 -p 15672:15672 rabbitmq:3.6.10-management-alpine  || true
-
-#docker-run-unit:
-#	docker-compose up unit-test
+	$(GOCMD) mod download
+	$(GOCMD) mod verify
 
 docker-run:
 	docker-compose stop url-encoder

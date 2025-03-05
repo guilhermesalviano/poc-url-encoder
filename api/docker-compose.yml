@@ -1,52 +1,38 @@
 version: '3.8'
 services:
-  url-encoder:
-    image: golang:1.19.4-alpine3.17
+  rabbitmq:
+    image: rabbitmq:3.11-management
     ports:
-      - 3333:3333
-    working_dir: /go/src/github.com/guilhermesalviano/url-encoder
-    volumes:
-      - ./:/go/src/github.com/guilhermesalviano/url-encoder
-    command: sh -c "apk add --no-cache git make && git config --global --add url.'git@github.com:'.insteadOf 'https://github.com/' && make deps && make run"
+      - 5672:5672     # AMQP protocol port
+      - 15672:15672   # Management UI port
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
     networks:
       - url-encoder-network
-  #build:
-  #  image: golang:1.19.4-alpine3.17
-  #  env_file: development.env
-  #  ports:
-  #    - 7020:80
-  #  volumes:
-  #    - ./:/go/src/github.com/guilhermesalviano/url-encoder
-  #  working_dir: /go/src/github.com/guilhermesalviano/url-encoder
-  #  command: sh -c "git config --global --add url.'git@github.com:'.insteadOf #'https://github.com/' && make deps && make build"
-  #  networks:
-  #    - network
-  #  environment:
-  #    - GO111MODULE=on
-  #    - GOSUMDB=off
-  #    - GOPROXY=direct
-  #unit-test:
-  #  image: golang:1.19.4-alpine3.17
-  #  volumes:
-  #    - ./:/go/src/github.com/guilhermesalviano/url-encoder
-  #  working_dir: /go/src/github.com/guilhermesalviano/url-encoder
-  #  command:   sh -c "git config --global --add url.'git@github.com:'.#insteadOf 'https://github.com/' && make test"
-  #  environment:
-  #      - GO111MODULE=on
-  #      - GOSUMDB=off
-  #      - GOPROXY=direct
-  #vendor:
-  #  image: golang:1.19.4-alpine3.17
-  #  volumes:
-  #    - ./:/go/src/github.com/guilhermesalviano/url-encoder
-  #  working_dir: /go/src/github.com/guilhermesalviano/url-encoder
-  #  environment:
-  #    - DEPNOLOCK=1
-  #    - GO111MODULE=on
-  #    - GOSUMDB=off
-  #    - GOPROXY=direct
-  #  command:  sh -c "git config --global --add url.'git@github.com:'.insteadOf 'https://github.com/' && make deps"
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+      - rabbitmq-log:/var/log/rabbitmq
+
+  url-encoder:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 3333:3333
+    environment:
+      - RABBITMQ_URI=amqp://rabbitmq:5672/
+      - WEB_HOST=http://localhost:5173
+      - SERVER_PORT=3333
+    depends_on:
+      - rabbitmq
+    networks:
+      - url-encoder-network
   
 networks:
   url-encoder-network:
     name: url-encoder-network
+
+volumes:
+  rabbitmq-data:
+  rabbitmq-log:

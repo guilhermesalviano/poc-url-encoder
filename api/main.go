@@ -1,7 +1,7 @@
 package main
 
 import (
-	"url-encoder/application"
+	"url-encoder/pkg/application"
 )
 
 func main() {

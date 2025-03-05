@@ -10,12 +10,12 @@ type RequestBody struct {
     Content string `json:"content"`
 }
 
-func healthCheck(w http.ResponseWriter, r *http.Request) {
+func healthCheckOld(w http.ResponseWriter, r *http.Request) {
     w.Header().Set("Content-Type", "application/json")
     json.NewEncoder(w).Encode(map[string]string{"message": "API is running!"})
 }
 
-func encodeHandler(w http.ResponseWriter, r *http.Request) {
+func encodeHandlerOld(w http.ResponseWriter, r *http.Request) {
     w.Header().Set("Content-Type", "application/json")
 
     if r.Method != http.MethodPost {
@@ -77,7 +77,7 @@ func encodeHandler(w http.ResponseWriter, r *http.Request) {
     json.NewEncoder(w).Encode(response)
 }
 
-func decodeHandler(w http.ResponseWriter, r *http.Request) {
+func decodeHandlerOld(w http.ResponseWriter, r *http.Request) {
     w.Header().Set("Content-Type", "application/json")
 
     if r.Method != http.MethodPost {
